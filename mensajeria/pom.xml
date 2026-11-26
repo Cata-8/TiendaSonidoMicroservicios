@@ -81,6 +81,22 @@
 			<artifactId>flyway-mysql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- Seguridad: Spring Security + validación de tokens JWT (incluye Nimbus) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+
+		<!-- Swagger / OpenAPI (versión 3.x es la compatible con Spring Boot 4) -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>3.0.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>

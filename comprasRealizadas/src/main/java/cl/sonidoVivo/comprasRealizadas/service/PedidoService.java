@@ -37,11 +37,10 @@ public class PedidoService {
         this.catalogoCliente = catalogoCliente;
     }
 
-    public PedidoRespuesta crear(PedidoSolicitud solicitud){
-        // 1) Si viene un usuario, debe existir en el microservicio de usuarios
-        if (solicitud.usuarioId() != null) {
-            usuarioCliente.verificarExiste(solicitud.usuarioId());
-        }
+    // usuarioId sale del token JWT del comprador (lo entrega el controlador)
+    public PedidoRespuesta crear(Long usuarioId, PedidoSolicitud solicitud){
+        // 1) El comprador debe existir en el microservicio de usuarios
+        usuarioCliente.verificarExiste(usuarioId);
 
         // 2) Si el mismo producto viene repetido, se suman las cantidades
         Map<String, Integer> cantidades = new LinkedHashMap<>();
@@ -51,7 +50,7 @@ public class PedidoService {
 
         // 3) Se arma el pedido con nombre y precio REALES del catálogo (no los del cliente)
         Pedido pedido = new Pedido();
-        pedido.setUsuarioId(solicitud.usuarioId());
+        pedido.setUsuarioId(usuarioId);
 
         List<ItemStockRemoto> descuentos = new ArrayList<>();
         int total = 0;

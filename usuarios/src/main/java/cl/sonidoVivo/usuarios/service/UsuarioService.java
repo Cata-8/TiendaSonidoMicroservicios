@@ -31,7 +31,9 @@ public class UsuarioService {
                 HttpStatus.NOT_FOUND, "No existe el usuario " + id));
     }
 
-    public Usuario crear(UsuarioSolicitud datos){
+    // esAdmin = true solo si quien hace la petición es un administrador con sesión.
+    // Así nadie puede registrarse a sí mismo como admin: un registro público siempre crea un "cliente".
+    public Usuario crear(UsuarioSolicitud datos, boolean esAdmin){
         if (datos.clave() == null || datos.clave().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Debe ingresar la clave");
         }
@@ -39,6 +41,9 @@ public class UsuarioService {
 
         Usuario usuario = new Usuario();
         copiarDatos(datos, usuario);
+        if (!esAdmin) {
+            usuario.setRol("cliente");
+        }
         usuario.setClave(passwordEncoder.encode(datos.clave()));
 
         return repository.save(usuario);

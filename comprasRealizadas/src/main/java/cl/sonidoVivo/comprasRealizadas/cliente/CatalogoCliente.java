@@ -16,8 +16,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class CatalogoCliente {
     private final RestClient restClient;
 
-    public CatalogoCliente(@Value("${servicios.catalogo.url}") String url){
+    private final String claveServicio;
+
+    public CatalogoCliente(@Value("${servicios.catalogo.url}") String url,
+                           @Value("${seguridad.clave-servicio}") String claveServicio){
         this.restClient = RestClient.create(url);
+        this.claveServicio = claveServicio;
     }
 
     public ProductoRemoto buscarProducto(String codigo){
@@ -38,6 +42,7 @@ public class CatalogoCliente {
         try {
             restClient.post()
                 .uri("/api/productos/descontar-stock")
+                .header("X-Clave-Servicio", claveServicio) // clave interna entre microservicios
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(items)
                 .retrieve()
